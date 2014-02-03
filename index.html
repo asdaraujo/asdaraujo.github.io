@@ -39,7 +39,7 @@
 				<section>
 					<h1>André's <em>cafofo</em></h1>
 					<p>
-						<small>Created by <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small>
+						<small>Created by André Araújo / <a href="http://twitter.com/asdaraujo">@asdaraujo</a></small>
 					</p>
 				</section>
 
@@ -358,10 +358,27 @@ function linkify( selector ) {
 			// Full list of configuration options available here:
 			// https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
-				controls: true,
-				progress: true,
+				controls: false,
+				progress: false,
+				slideNumber: false,
 				history: true,
-				center: true,
+				keyboard: true,
+				center: false,
+				touch: true,
+				loop: false,
+				rtl: false,
+				fragments: true,
+				autoSlide: 0,
+				autoSlideStoppable: true,
+				mouseWheel: false,
+				hideAddressBar: true,
+				previewLinks: true,
+				transition: 'default', // default/cube/page/concave/zoom/linear/fade/none
+                transitionSpeed: 'default', // default/fast/slow
+                backgroundTransition: 'default', // default/none/slide/concave/convex/zoom
+                viewDistance: 3,
+                parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+                parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
 
 				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
 				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
