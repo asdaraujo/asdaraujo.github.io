@@ -62,7 +62,8 @@ function getVoteId() {
 }
 
 function generateQuickGuid() {
-  return Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
+  var base = Math.random().toString(36).substring(2, 9);
+  return base + btoa(base).substring(0, 3);
 }
 
 function setCookie(cname, cvalue, exdays) {
