@@ -53,10 +53,10 @@ function voteEmail(choice) {
 }
 
 function getVoteId() {
-  var voteId = getCookie("vote_id");
+  var voteId = getCookie("voteid");
   if (voteId == "") {
     voteId = generateQuickGuid();
-    setCookie("vote_id", voteId, 365);
+    setCookie("voteid", voteId, 365);
   }
   return voteId;
 }
