@@ -17,32 +17,79 @@
   <div class="container-fluid">
     <div class="row mb-3">
       <div class="col-6 p-0 text-secondary">Enterprise-Select-West</div>
-      <div class="col-3 p-0"><a href="sms:+18562811430?body=Hackathon%20vote%3AEnterprise-Select-West." role="button" class="btn btn-secondary">SMS</a></div>
-      <div class="col-3 p-0"><a href="mailto:sko23voting@gmail.com?subject=Vote&body=Hackathon%20vote%3AEnterprise-Select-West." role="button" class="btn btn-secondary">Email</a></div>
+      <div class="col-3 p-0"><a href="javascript:voteSms('Enterprise-Select-West')" role="button" class="btn btn-secondary">SMS</a></div>
+      <div class="col-3 p-0"><a href="javascript:voteEmail('Enterprise-Select-West')" role="button" class="btn btn-secondary">Email</a></div>
     </div>
     <div class="row mb-3">
       <div class="col-6  p-0 text-success">The Green Team</div>
-      <div class="col-3  p-0"><a href="sms:+18562811430?body=Hackathon%20vote%3AThe%20Green%20Team." role="button" class="btn btn-success">SMS</a></div>
-      <div class="col-3  p-0"><a href="mailto:sko23voting@gmail.com?subject=Vote&body=Hackathon%2Bvote%3AThe%20Green%20Team." role="button" class="btn btn-success">Email</a></div>
+      <div class="col-3  p-0"><a href="javascript:voteSms('The Green Team')" role="button" class="btn btn-success">SMS</a></div>
+      <div class="col-3  p-0"><a href="javascript:voteEmail('The Green Team')" role="button" class="btn btn-success">Email</a></div>
     </div>
     <div class="row mb-3">
       <div class="col-6  p-0 text-danger">Acan & Friends</div>
-      <div class="col-3  p-0"><a href="sms:+18562811430?body=Hackathon%20vote%3AAcan%20%26%20Friends." role="button" class="btn btn-danger">SMS</a></div>
-      <div class="col-3  p-0"><a href="mailto:sko23voting@gmail.com?subject=Vote&body=Hackathon%20vote%3AAcan%20%26%20Friends." role="button" class="btn btn-danger">Email</a></div>
+      <div class="col-3  p-0"><a href="javascript:voteSms('Acan & Friends')" role="button" class="btn btn-danger">SMS</a></div>
+      <div class="col-3  p-0"><a href="javascript:voteEmail('Acan & Friends')" role="button" class="btn btn-danger">Email</a></div>
     </div>
     <div class="row mb-3">
       <div class="col-6  p-0 text-primary">Public Sector Announcement</div>
-      <div class="col-3  p-0"><a href="sms:+18562811430?body=Hackathon%20vote%3APublic%20Sector%20Announcement." role="button" class="btn btn-primary">SMS</a></div>
-      <div class="col-3  p-0"><a href="mailto:sko23voting@gmail.com?subject=Vote&body=Hackathon%2Bvote%3APublic%20Sector%20Announcement." role="button" class="btn btn-primary">Email</a></div>
+      <div class="col-3  p-0"><a href="javascript:voteSms('Public Sector Announcement')" role="button" class="btn btn-primary">SMS</a></div>
+      <div class="col-3  p-0"><a href="javascript:voteEmail('Public Sector Announcement')" role="button" class="btn btn-primary">Email</a></div>
     </div>
     <div class="row mb-3">
       <div class="col-6  p-0 text-warning">Hack-a-Stream</div>
-      <div class="col-3  p-0"><a href="sms:+18562811430?body=Hackathon%20vote%3AHack-a-stream." role="button" class="btn btn-warning">SMS</a></div>
-      <div class="col-3  p-0"><a href="mailto:sko23voting@gmail.com?subject=Vote&body=Hackathon%2Bvote%3AHack-a-stream." role="button" class="btn btn-warning">Email</a></div>
+      <div class="col-3  p-0"><a href="javascript:voteSms('Hack-a-stream')" role="button" class="btn btn-warning">SMS</a></div>
+      <div class="col-3  p-0"><a href="javascript:voteEmail('Hack-a-stream')" role="button" class="btn btn-warning">Email</a></div>
     </div>
   </div>
 </div>
 
+<script language="JavaScript">
+function voteSms(choice) {
+  window.location.assign("sms:+18562811430?body=Hackathon%20vote%3A" + getVoteId() + "%3A" + encodeURIComponent(choice));
+}
+
+function voteEmail(choice) {
+  window.location.assign("mailto:sko23voting@gmail.com?subject=Vote&body=Hackathon%20vote%3A" + getVoteId() + "%3A" + encodeURIComponent(choice));
+}
+
+function getVoteId() {
+  var voteId = getCookie("vote_id");
+  if (voteId == "") {
+    voteId = generateQuickGuid();
+    setCookie("vote_id", voteId, 365);
+  }
+  return voteId;
+}
+
+function generateQuickGuid() {
+  return Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
+}
+
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  alert(cname + "=" + cvalue + ";" + expires + ";path=/");
+  alert(document.cookie);
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+</script>
 </body>
 </html>
 
