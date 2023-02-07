@@ -45,11 +45,11 @@
 
 <script language="JavaScript">
 function voteSms(choice) {
-  window.location.assign("sms:+18562811430?body=Hackathon%20vote%3A" + getVoteId() + "%3A" + encodeURIComponent(choice));
+  window.location.assign("sms:+18562811430?body=Hackathon%20vote%3A" + getVoteId() + "%3A" + encodeURIComponent(choice) + "%3A");
 }
 
 function voteEmail(choice) {
-  window.location.assign("mailto:sko23voting@gmail.com?subject=Vote&body=Hackathon%20vote%3A" + getVoteId() + "%3A" + encodeURIComponent(choice));
+  window.location.assign("mailto:sko23voting@gmail.com?subject=Vote&body=Hackathon%20vote%3A" + getVoteId() + "%3A" + encodeURIComponent(choice) + "%3A");
 }
 
 function getVoteId() {
