@@ -24,11 +24,7 @@
 		</p>
 	</body>
 <script language="JavaScript">
-function voteSms(choice) {
-  window.location.assign(choice + encodeURIComponent(" (" + getOS() + ")"));
-}
-
-function getMobileOperatingSystem() {
+function getOS() {
     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
     // Windows Phone must come first because its UA also contains "Android"
@@ -46,6 +42,10 @@ function getMobileOperatingSystem() {
     }
 
     return "unknown";
+}
+
+function voteSms(choice) {
+  window.location.assign(choice + encodeURIComponent(" (" + getOS() + ")"));
 }
 </script>
 </html>
