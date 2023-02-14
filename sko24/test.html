@@ -5,16 +5,47 @@
 	</head>
 	<body>
 		<p>
-			<a href="sms:+18562811430?body=Hello,%20World%3A%20Test%201">Test 1</a>
+			<a href="javascript:voteSms('sms:+18562811430?body=Hello,%20World%3A%20Test%201')">Test 1</a>
 		</p>
 		<p>
-			<a href="sms:+18562811430;body=Hello,%20World%3A%20Test%202">Test 2</a>
+			<a href="javascript:voteSms('sms:+18562811430;body=Hello,%20World%3A%20Test%202')">Test 2</a>
 		</p>
 		<p>
-			<a href="sms://+18562811430?body=Hello,%20World%3A%20Test%203">Test 3</a>
+			<a href="javascript:voteSms('sms://+18562811430?body=Hello,%20World%3A%20Test%203')">Test 3</a>
 		</p>
 		<p>
-			<a href="sms://+18562811430;body=Hello,%20World%3A%20Test%204">Test 4</a>
+			<a href="javascript:voteSms('sms://+18562811430;body=Hello,%20World%3A%20Test%204')">Test 4</a>
+		</p>
+		<p>
+			<a href="javascript:voteSms('sms:18562811430;body=Hello,%20World%3A%20Test%205')">Test 5</a>
+		</p>
+		<p>
+			<a href="javascript:voteSms('sms://18562811430;body=Hello,%20World%3A%20Test%206')">Test 6</a>
 		</p>
 	</body>
+<script language="JavaScript">
+function voteSms(choice) {
+  window.location.assign(choice + encodeURIComponent(" (" + getOS() + ")"));
+}
+
+function getMobileOperatingSystem() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone";
+    }
+
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+
+    return "unknown";
+}
+</script>
 </html>
