@@ -1,0 +1,83 @@
+{
+  "xbackgroundImage": "https://images.unsplash.com/photo-1615092296061-e2ccfeb2f3d6?auto=format&fit=crop&w=1950&q=80",
+  "xbackgroundAttribution": {
+    "photographerName": "Matt Palmer",
+    "photographerUrl": "https://unsplash.com/@mattpalmer?utm_source=quick_links_app&utm_medium=referral",
+    "photoUrl": "https://unsplash.com/photos/wildfire-burning-across-hillside-at-dusk-kbTp7dBzHyY?utm_source=quick_links_app&utm_medium=referral",
+    "unsplashUrl": "https://unsplash.com/?utm_source=quick_links_app&utm_medium=referral",
+    "unsplashPhotoId": "kbTp7dBzHyY",
+    "unsplashAccessKey": null
+  },
+  "backgroundImage": "https://images.unsplash.com/photo-1631506827063-6310688ec9e1?q=80&w=687&auto=format&fit=crop",
+  "backgroundAttribution": {
+    "photographerName": "Mars Plex",
+    "photographerUrl": "https://unsplash.com/@mars_plex?utm_source=unsplash&utm_medium=referral",
+    "photoUrl": "https://unsplash.com/photos/a-red-and-white-fire-hydrant-in-a-field-za4GybDfOz0",
+    "unsplashUrl": "https://unsplash.com/?utm_source=quick_links_app&utm_medium=referral",
+    "unsplashPhotoId": "za4GybDfOz0",
+    "unsplashAccessKey": null
+  },
+  "backgroundLuminosity": -0.3,
+  "links": [
+      {
+        "url": "https://www.members.cfa.vic.gov.au/",
+        "text": "Members Online ",
+        "icon": null
+      },
+      {
+        "url": "https://learninghub.cfa.vic.gov.au/ui/learn/current?menuId=30649237&locale=en-GB",
+        "text": "Learning Hub",
+        "icon": "📚"
+      },
+      {
+        "url": "https://mapsonline.cfa.vic.gov.au/Html5Viewer/index.html?viewer=MOLViewer10.MOL_Viewer",
+        "text": "Maps Online",
+        "icon": "🧭"
+      },
+      {
+        "url": "https://www.broadcastify.com/listen/feed/18999",
+        "text": "Broadcastify",
+        "icon": null
+      },
+      {
+        "url": "https://www.cfa.vic.gov.au/home/local-information",
+        "text": "Local info",
+        "icon": "⛈️"
+      },
+      {
+        "url": "https://2t77btxt4j8crsjn.launchpad.cfapps.ap10.hana.ondemand.com/site?siteId=eb2d953f-7dbe-4ad9-947d-2b52dc110ae5#Shell-home",
+        "text": "Digital Store",
+        "icon": "🛒"
+      },
+      {
+        "url": "https://www.cfa.vic.gov.au/about-us/publications/fire-safety-translations",
+        "text": "Translations",
+        "icon": "🌐"
+      },
+      {
+        "url": "https://vicpagers.net.au",
+        "text": "VicPagers",
+        "icon": null
+      },
+      {
+        "url": "https://www.google.com/maps/d/edit?mid=19AIAarVsHU28p7M24K3t8Vty4LtMr0s&ll=-37.74348186016503%2C145.72051899999997&z=12",
+        "text": "Water Points",
+        "icon": "🚩"
+      },
+      {
+        "url": "https://www.members.cfa.vic.gov.au/portfolios/chief-officer-and-service-delivery/regions/north-east-region/region-documents/district-13-ner-documents",
+        "text": "D13 NER Docs",
+        "icon": "📄"
+      },
+      {
+        "url": "https://gist.github.com/asdaraujo/0e85211373e89f019fd22c894de299d5/raw/86d6f35045d799a4488c1fbf548c8b384830f61f/welfare-check-pager.user.js",
+        "text": "TM: Welfare Check Pager",
+        "icon": null
+      },
+      {
+        "url": "https://www.firefighterclimb.org.au/climber/andrearaujo/",
+        "text": "MFSC 2026",
+        "icon": null
+      }
+  ]
+}

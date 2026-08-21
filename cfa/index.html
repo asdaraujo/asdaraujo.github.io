@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Links</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --text-color: #ffffff;
+    --accent: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+
+  body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background-color: #333;
+    background-image: var(--bg-image, none);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 5px 10px;
+  }
+
+  .bg-luminosity-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .panel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    padding: 0;
+  }
+
+  h1 {
+    text-align: center;
+    margin: 0 0 12px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    letter-spacing: 0.02em;
+    color: var(--text-color);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  }
+
+  ul.link-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  ul.link-list li a {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+    text-decoration: none;
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 30px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    margin: 5px 0;
+  }
+
+  ul.link-list li a:hover,
+  ul.link-list li a:focus {
+    opacity: 0.75;
+    transform: translateX(4px);
+  }
+
+  ul.link-list li a .icon {
+    flex: 0 0 auto;
+    font-size: 1em;
+    line-height: 1;
+    width: 1.1em;
+    text-align: center;
+  }
+
+  ul.link-list li a .icon img {
+    width: 1em;
+    height: 1em;
+    display: block;
+    object-fit: contain;
+  }
+
+  ul.link-list li a .text {
+    flex: 1 1 auto;
+  }
+
+  .status-message {
+    text-align: center;
+    color: #ffb4b4;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.95rem;
+    margin-top: 16px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  }
+
+  .attribution {
+    position: fixed;
+    left: 12px;
+    bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    z-index: 10;
+  }
+
+  .attribution a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .attribution a:hover {
+    color: #ffffff;
+  }
+</style>
+</head>
+<body>
+
+  <div class="bg-luminosity-overlay" id="bg-luminosity-overlay"></div>
+
+  <div class="panel">
+    <h1>Quick Links</h1>
+    <ul class="link-list" id="link-list">
+      <!-- Links are injected here from config.json -->
+    </ul>
+    <div class="status-message" id="status-message"></div>
+  </div>
+
+  <div class="attribution" id="attribution"></div>
+
+<script>
+  const CONFIG_URL = "config.json";
+
+  function isImageIcon(icon) {
+    return /^https?:\/\//i.test(icon) || /\.(png|jpe?g|svg|gif|webp)$/i.test(icon);
+  }
+
+  function getFaviconUrl(pageUrl) {
+    try {
+      const domain = new URL(pageUrl).hostname;
+      return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
+    } catch (err) {
+      return "";
+    }
+  }
+
+  function buildIconMarkup(icon, url) {
+    const hasIcon = icon !== null && icon !== undefined && String(icon).trim() !== "";
+
+    if (!hasIcon) {
+      const favicon = getFaviconUrl(url);
+      return favicon ? `<img src="${favicon}" alt="" loading="lazy">` : "";
+    }
+
+    if (isImageIcon(icon)) {
+      return `<img src="${icon}" alt="" loading="lazy">`;
+    }
+    // Treat as emoji / text glyph
+    return icon;
+  }
+
+  function renderLinks(links) {
+    const list = document.getElementById("link-list");
+    list.innerHTML = "";
+
+    links.forEach(({ text, url, icon }) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+
+      const iconSpan = document.createElement("span");
+      iconSpan.className = "icon";
+      iconSpan.innerHTML = buildIconMarkup(icon, url);
+
+      const textSpan = document.createElement("span");
+      textSpan.className = "text";
+      textSpan.textContent = text;
+
+      a.appendChild(iconSpan);
+      a.appendChild(textSpan);
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+  }
+
+  function applyBackground(imageUrl) {
+    if (imageUrl) {
+      document.body.style.setProperty("--bg-image", `url("${imageUrl}")`);
+    }
+  }
+
+  function applyLuminosity(luminosity) {
+    const overlay = document.getElementById("bg-luminosity-overlay");
+    const value = Number(luminosity);
+
+    if (!Number.isFinite(value) || value === 0) {
+      overlay.style.backgroundColor = "transparent";
+      return;
+    }
+
+    // Clamp to the supported range.
+    const clamped = Math.max(-1, Math.min(1, value));
+    const color = clamped < 0 ? "0, 0, 0" : "255, 255, 255";
+    const opacity = Math.abs(clamped);
+
+    overlay.style.backgroundColor = `rgba(${color}, ${opacity})`;
+  }
+
+  function renderAttributionMarkup(name, profileUrl, photoUrl, unsplashUrl) {
+    const el = document.getElementById("attribution");
+    if (!name) {
+      el.innerHTML = "";
+      return;
+    }
+    const nameLink = profileUrl
+      ? `<a href="${profileUrl}" target="_blank" rel="noopener noreferrer">${name}</a>`
+      : name;
+    const unsplashLink = unsplashUrl
+      ? `<a href="${unsplashUrl}" target="_blank" rel="noopener noreferrer">Unsplash</a>`
+      : "Unsplash";
+    el.innerHTML = `Photo by ${nameLink} on ${unsplashLink}`;
+  }
+
+  async function loadAttribution(attribution) {
+    if (!attribution) return;
+
+    const { unsplashAccessKey, unsplashPhotoId, photographerName, photographerUrl, photoUrl, unsplashUrl } = attribution;
+
+    // If an Unsplash API access key + photo ID are configured, fetch live data
+    // directly from the Unsplash API so credit always reflects Unsplash's current record.
+    if (unsplashAccessKey && unsplashPhotoId) {
+      try {
+        const res = await fetch(
+          `https://api.unsplash.com/photos/${unsplashPhotoId}?client_id=${unsplashAccessKey}`
+        );
+        if (!res.ok) throw new Error(`Unsplash API error: ${res.status}`);
+        const data = await res.json();
+
+        const name = data?.user?.name;
+        const profileUrl = data?.user?.links?.html
+          ? `${data.user.links.html}?utm_source=quick_links_app&utm_medium=referral`
+          : photographerUrl;
+        const liveePhotoUrl = data?.links?.html
+          ? `${data.links.html}?utm_source=quick_links_app&utm_medium=referral`
+          : photoUrl;
+
+        renderAttributionMarkup(name, profileUrl, liveePhotoUrl, unsplashUrl);
+
+        // Per Unsplash API guidelines, notify them the photo was used ("hotlinked" download trigger).
+        if (data?.links?.download_location) {
+          fetch(`${data.links.download_location}&client_id=${unsplashAccessKey}`).catch(() => {});
+        }
+        return;
+      } catch (err) {
+        console.warn("Falling back to static Unsplash attribution:", err);
+      }
+    }
+
+    // Fallback: static attribution details supplied in config.json.
+    renderAttributionMarkup(photographerName, photographerUrl, photoUrl, unsplashUrl);
+  }
+
+  async function init() {
+    const statusEl = document.getElementById("status-message");
+    try {
+      const response = await fetch(CONFIG_URL, { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Failed to load ${CONFIG_URL}: ${response.status}`);
+      }
+      const config = await response.json();
+      applyBackground(config.backgroundImage);
+      applyLuminosity(config.backgroundLuminosity);
+      renderLinks(Array.isArray(config.links) ? config.links : []);
+      await loadAttribution(config.backgroundAttribution);
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent =
+        "Couldn't load config.json. If you're opening this file directly " +
+        "(file://), serve it from a local web server instead (e.g. `python3 -m http.server`).";
+    }
+  }
+
+  init();
+</script>
+
+</body>
+</html>
