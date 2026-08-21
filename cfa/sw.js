@@ -23,6 +23,8 @@ self.addEventListener('install', (event) => {
 
 // 2. Fetch Event: Intercept requests and serve from cache first
 self.addEventListener('fetch', (event) => {
+    console.log('fetch intercepted');
+    console.log(event.request);
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             // Return the cached file if found, otherwise make a network request
