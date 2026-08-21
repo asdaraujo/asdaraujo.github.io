@@ -2,7 +2,7 @@
   "name": "Quick Links",
   "short_name": "Links",
   "description": "Handy links to have",
-  "start_url": "/cfa",
+  "start_url": "/cfa?cfg=warb",
   "display": "standalone",
   "icons": [
     {
