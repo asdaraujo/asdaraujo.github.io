@@ -2,7 +2,8 @@ const CACHE_NAME = 'static-cache-v1';
 
 // List all the local files you want to force-cache for offline use
 const ASSETS_TO_CACHE = [
-    'index.html',
+    'index.html?cfg=warb',
+    'index.html?cfg=qr-codes',
     'warb.json',
     'qr-codes.json',
     'images/CanIOrCantI.png',
