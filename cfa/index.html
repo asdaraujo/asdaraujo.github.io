@@ -158,7 +158,10 @@
   <div class="attribution" id="attribution"></div>
 
 <script>
-  const CONFIG_URL = "config.json";
+  //const CONFIG_URL = "config.json";
+  const QUERY_STRING = window.location.search;
+  const URL_PARAMS = new URLSearchParams(QUERY_STRING);
+  const CONFIG_URL = URL_PARAMS.get('cfg');
 
   function isImageIcon(icon) {
     return /^https?:\/\//i.test(icon) || /\.(png|jpe?g|svg|gif|webp)$/i.test(icon);
