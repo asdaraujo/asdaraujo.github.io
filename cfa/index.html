@@ -188,7 +188,8 @@
 <script>
   const QUERY_STRING = window.location.search;
   const URL_PARAMS = new URLSearchParams(QUERY_STRING);
-  const CONFIG_URL = URL_PARAMS.get('cfg') + '.json';
+  const CONFIG_NAME = URL_PARAMS.get('cfg');
+  const CONFIG_URL = CONFIG_NAME + '.json';
 
   function isImageIcon(icon) {
     return /^https?:\/\//i.test(icon) || /\.(png|jpe?g|svg|gif|webp)$/i.test(icon);
@@ -391,7 +392,7 @@
       await loadAttribution(config.backgroundAttribution);
     } catch (err) {
       console.error(err);
-      statusEl.textContent = "Couldn't load configuration.";
+      statusEl.textContent = "Couldn't load configuration [" + CONFIG_NAME + "].";
     }
   }
 
