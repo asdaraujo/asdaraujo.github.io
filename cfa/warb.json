@@ -1,0 +1,65 @@
+{
+  "title": "CFA Quick Links",
+  "backgroundImage": "https://images.unsplash.com/photo-1631506827063-6310688ec9e1?q=80&w=687&auto=format&fit=crop",
+  "backgroundAttribution": {
+    "photographerName": "Mars Plex",
+    "photographerUrl": "https://unsplash.com/@mars_plex?utm_source=unsplash&utm_medium=referral",
+    "photoUrl": "https://unsplash.com/photos/a-red-and-white-fire-hydrant-in-a-field-za4GybDfOz0",
+    "unsplashUrl": "https://unsplash.com/?utm_source=quick_links_app&utm_medium=referral",
+    "unsplashPhotoId": "za4GybDfOz0",
+    "unsplashAccessKey": null
+  },
+  "backgroundLuminosity": -0.3,
+  "links": [
+      {
+        "url": "https://www.members.cfa.vic.gov.au/",
+        "text": "Members Online ",
+        "icon": null
+      },
+      {
+        "url": "https://learninghub.cfa.vic.gov.au/ui/learn/current?menuId=30649237&locale=en-GB",
+        "text": "Learning Hub",
+        "icon": "📚"
+      },
+      {
+        "url": "https://mapsonline.cfa.vic.gov.au/Html5Viewer/index.html?viewer=MOLViewer10.MOL_Viewer",
+        "text": "Maps Online",
+        "icon": "🧭"
+      },
+      {
+        "url": "https://www.broadcastify.com/listen/feed/18999",
+        "text": "Broadcastify",
+        "icon": null
+      },
+      {
+        "url": "https://www.cfa.vic.gov.au/warnings-restrictions/fire-bans-ratings-and-restrictions/total-fire-bans-fire-danger-ratings/central-fire-district",
+        "text": "Central District FDR",
+        "icon": "🌡️"
+      },
+      {
+        "url": "https://www.cfa.vic.gov.au/about-us/publications/fire-safety-translations",
+        "text": "Translations",
+        "icon": "🌐"
+      },
+      {
+        "url": "https://www.google.com/maps/d/edit?mid=19AIAarVsHU28p7M24K3t8Vty4LtMr0s&ll=-37.74348186016503%2C145.72051899999997&z=12",
+        "text": "Water Points",
+        "icon": "🚩"
+      },
+      {
+        "url": "?cfg=qr-codes",
+        "text": "QR Codes",
+        "icon": "🔗"
+      },
+      {
+        "url": "https://applications.cfa.vic.gov.au/mycfa/Show?pageId=communicationObservations",
+        "text": "Radio Observation Reporting",
+        "icon": "📟"
+      },
+      {
+        "url": "https://viccfa.sharepoint.com/sites/District13-AllStaff-/Operations/Forms/AllItems.aspx?id=%2Fsites%2FDistrict13%2DAllStaff%2D%2FOperations%2FPreparedness%2FOperations%20Folder%20%2D%20vehicle%2FD13%20Operations%20Folder%2Epdf&parent=%2Fsites%2FDistrict13%2DAllStaff%2D%2FOperations%2FPreparedness%2FOperations%20Folder%20%2D%20vehicle&p=true&ga=1",
+        "text": "D13 Operations Folder",
+        "icon": "📂"
+      }
+  ]
+}

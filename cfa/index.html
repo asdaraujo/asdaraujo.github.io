@@ -141,6 +141,29 @@
   .attribution a:hover {
     color: #ffffff;
   }
+
+  .image-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    padding: 24px;
+  }
+
+  .image-modal-overlay.open {
+    display: flex;
+  }
+
+  .image-modal-overlay img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  }
 </style>
 </head>
 <body>
@@ -148,7 +171,7 @@
   <div class="bg-luminosity-overlay" id="bg-luminosity-overlay"></div>
 
   <div class="panel">
-    <h1>Quick Links</h1>
+    <h1 id="page-title">Quick Links</h1>
     <ul class="link-list" id="link-list">
       <!-- Links are injected here from config.json -->
     </ul>
@@ -157,11 +180,14 @@
 
   <div class="attribution" id="attribution"></div>
 
+  <div class="image-modal-overlay" id="image-modal-overlay">
+    <img id="image-modal-img" src="" alt="">
+  </div>
+
 <script>
-  //const CONFIG_URL = "config.json";
   const QUERY_STRING = window.location.search;
   const URL_PARAMS = new URLSearchParams(QUERY_STRING);
-  const CONFIG_URL = URL_PARAMS.get('cfg');
+  const CONFIG_URL = URL_PARAMS.get('cfg') + '.json';
 
   function isImageIcon(icon) {
     return /^https?:\/\//i.test(icon) || /\.(png|jpe?g|svg|gif|webp)$/i.test(icon);
@@ -191,6 +217,43 @@
     return icon;
   }
 
+  function openImageModal(url) {
+    const overlay = document.getElementById("image-modal-overlay");
+    const img = document.getElementById("image-modal-img");
+    img.src = url;
+    overlay.classList.add("open");
+  }
+
+  function closeImageModal() {
+    const overlay = document.getElementById("image-modal-overlay");
+    const img = document.getElementById("image-modal-img");
+    overlay.classList.remove("open");
+    img.src = "";
+  }
+
+  document.getElementById("image-modal-overlay").addEventListener("click", closeImageModal);
+
+  async function handleLinkClick(event, url) {
+    event.preventDefault();
+
+    let isImage = false;
+    try {
+      const res = await fetch(url, { method: "HEAD" });
+      const contentType = res.headers.get("Content-Type") || "";
+      isImage = contentType.toLowerCase().startsWith("image/");
+    } catch (err) {
+      // HEAD request failed (e.g. blocked by CORS, or the server doesn't support it).
+      // Fall back to treating it as a normal link.
+      isImage = false;
+    }
+
+    if (isImage) {
+      openImageModal(url);
+    } else {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  }
+
   function renderLinks(links) {
     const list = document.getElementById("link-list");
     list.innerHTML = "";
@@ -201,6 +264,7 @@
       a.href = url;
       a.target = "_blank";
       a.rel = "noopener noreferrer";
+      a.addEventListener("click", (event) => handleLinkClick(event, url));
 
       const iconSpan = document.createElement("span");
       iconSpan.className = "icon";
@@ -215,6 +279,14 @@
       li.appendChild(a);
       list.appendChild(li);
     });
+  }
+
+  function setTitle(title) {
+    if (title) {
+      document.title = title;
+      const titleElem = document.getElementById("page-title");
+      titleElem.innerHTML = title;
+    }
   }
 
   function applyBackground(imageUrl) {
@@ -295,6 +367,15 @@
   }
 
   async function init() {
+    // register service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Service Worker registered!', reg))
+          .catch(err => console.error('Registration failed:', err));
+      });
+    }
+
     const statusEl = document.getElementById("status-message");
     try {
       const response = await fetch(CONFIG_URL, { cache: "no-store" });
@@ -302,6 +383,7 @@
         throw new Error(`Failed to load ${CONFIG_URL}: ${response.status}`);
       }
       const config = await response.json();
+      setTitle(config.title);
       applyBackground(config.backgroundImage);
       applyLuminosity(config.backgroundLuminosity);
       renderLinks(Array.isArray(config.links) ? config.links : []);

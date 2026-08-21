@@ -1,0 +1,40 @@
+{
+  "title": "QR Codes",
+  "backgroundImage": "https://images.unsplash.com/photo-1626682561113-d1db402cc866?q=80&w=2274&auto=format&fit=crop",
+  "backgroundAttribution": {
+    "photographerName": "Brett Jordan",
+    "photographerUrl": "https://unsplash.com/@brett_jordan?utm_source=unsplash&utm_medium=referral",
+    "photoUrl": "https://unsplash.com/photos/black-and-white-remote-control--qUp3bejuzs",
+    "unsplashUrl": "https://unsplash.com/?utm_source=quick_links_app&utm_medium=referral",
+    "unsplashPhotoId": "qUp3bejuzs",
+    "unsplashAccessKey": null
+  },
+  "backgroundLuminosity": -0.3,
+  "links": [
+      {
+        "url": "images/CanIOrCantI.png",
+        "text": "Can I or Can't I?",
+        "icon": "❓"
+      },
+      {
+        "url": "images/FireSafetyTranslations.png",
+        "text": "Fire Safety Translations",
+        "icon": "🌐"
+      },
+      {
+        "url": "images/CentralFDR.png",
+        "text": "Central District FDR",
+        "icon": "🌡️"
+      },
+      {
+        "url": "images/FireRestrictionsDates.png",
+        "text": "Fire Restriction Dates",
+        "icon": "🗓️"
+      },
+      {
+        "url": "images/RegisterYourBurnOff.png",
+        "text": "Register Your Burn Off",
+        "icon": "🔥"
+      }
+  ]
+}
