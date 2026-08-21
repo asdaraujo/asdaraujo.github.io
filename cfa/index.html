@@ -238,6 +238,8 @@
   async function handleLinkClick(event, url) {
     event.preventDefault();
 
+    console.log('EVENT');
+    console.log(event);
     let isImage = false;
     try {
       const res = await fetch(url, { method: "HEAD" });
@@ -252,7 +254,8 @@
     if (isImage) {
       openImageModal(url);
     } else {
-      window.open(url, "_blank", "noopener,noreferrer");
+      const target = event.target.parentElement.target;
+      window.open(url, target, "noopener,noreferrer");
     }
   }
 
@@ -260,11 +263,15 @@
     const list = document.getElementById("link-list");
     list.innerHTML = "";
 
-    links.forEach(({ text, url, icon }) => {
+    console.log(links);
+    links.forEach(({ text, url, icon, target }) => {
       const li = document.createElement("li");
       const a = document.createElement("a");
       a.href = url;
-      a.target = "_blank";
+      if (target === undefined || target === null)
+        a.target = "_blank";
+      else
+        a.target = target;
       a.rel = "noopener noreferrer";
       a.addEventListener("click", (event) => handleLinkClick(event, url));
 
