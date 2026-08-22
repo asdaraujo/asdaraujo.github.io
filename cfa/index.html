@@ -314,6 +314,7 @@
 
     let isImage = false;
     let isReachable = false;
+    let msg = '';
     try {
       const res = await fetch(url, { method: "HEAD", mode: 'no-cors', signal: controller.signal });
       isReachable = true;
@@ -326,12 +327,13 @@
       isImage = false;
       isReachable = false;
       setOfflineMode();
+      msg = 'Error: ' + err.message;
     } finally {
       clearTimeout(timeout);
     }
 
     if (!isReachable) {
-      openMessageModal("It seems you're offline.<br/>Try again later.");
+      openMessageModal("It seems you're offline.<br/>Try again later.<br/>" + msg);
     } else if (isImage) {
       openImageModal(url);
     } else {
