@@ -7,9 +7,10 @@ const ASSETS_TO_CACHE = [
     self.registration.scope + 'warb.json',
     self.registration.scope + 'qr-codes.json',
     self.registration.scope + 'images/CanIOrCantI.png',
-//    '/styles.css',      // Add your CSS if you have one
-//    '/script.js',      // Add your JS if you have one
-//    '/logo.png'         // Add images if needed
+    self.registration.scope + 'images/CentralFDR.png',
+    self.registration.scope + 'images/FireRestrictionsDates.png',
+    self.registration.scope + 'images/FireSafetyTranslations.png',
+    self.registration.scope + 'images/RegisterYourBurnOff.png',
 ];
 
 // 1. Install Event: Save files to the browser's Cache Storage
