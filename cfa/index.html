@@ -89,8 +89,7 @@
     margin: 5px 0;
   }
 
-  ul.link-list li a:hover,
-  ul.link-list li a:focus-visible {
+  ul.link-list li a.is-hovered {
     opacity: 0.75;
     transform: translateX(4px);
   }
@@ -303,7 +302,11 @@
   document.getElementById("message-modal-overlay").addEventListener("click", closeMessageModal);
 
   async function handleLinkClick(event, url) {
+    const link = event.currentTarget;
     event.preventDefault();
+
+    // restore state of the link
+    link.classList.remove('is-hovered'); // clear immediately, don't wait for mouseleave
 
     const timeoutMs = 5000;
     const controller = new AbortController();
@@ -332,9 +335,17 @@
     } else if (isImage) {
       openImageModal(url);
     } else {
-      const target = event.target.parentElement.target;
-      window.open(url, target, "noopener,noreferrer");
+      window.open(url, link.target, "noopener,noreferrer");
     }
+
+//    console.log(event.target);
+//    console.log(event.target.parentElement);
+//    const mouseUpEvent = new MouseEvent('mouseup', {
+//      bubbles: true,
+//      cancelable: true,
+//      view: window
+//    });
+//    event.target.dispatchEvent(mouseUpEvent);
   }
 
   function renderLinks(links) {
@@ -350,7 +361,9 @@
       else
         a.target = target;
       a.rel = "noopener noreferrer";
-      a.addEventListener("click", (event) => handleLinkClick(event, url));
+      a.addEventListener('click', (event) => handleLinkClick(event, url));
+      a.addEventListener('mouseenter', () => a.classList.add('is-hovered'));
+      a.addEventListener('mouseleave', () => a.classList.remove('is-hovered'));
 
       checkResourceCacheStatus(url)
         .then((isCached) => {
