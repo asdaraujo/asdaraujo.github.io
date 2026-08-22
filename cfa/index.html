@@ -317,6 +317,7 @@
     let isReachable = false;
     let msg = '';
     try {
+      console.log('META');
       const res = await fetch(url, { method: "HEAD", mode: 'no-cors', signal: controller.signal });
       isReachable = true;
       const contentType = res.headers.get("Content-Type") || "";
