@@ -95,6 +95,10 @@
     transform: translateX(4px);
   }
 
+  div.panel.offline ul.link-list li.not-cached a {
+    opacity: 0.5;
+  }
+
   ul.link-list li a .icon {
     flex: 0 0 auto;
     font-size: 1em;
@@ -157,6 +161,8 @@
 
   .modal-overlay.open {
     display: flex;
+    flex-direction: column;
+    gap: 50px;
   }
 
   .modal-overlay img {
@@ -166,9 +172,19 @@
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   }
 
+  .modal-close {
+    font-family: 'Roboto', sans-serif;
+    font-size: 60px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.5);
+    opacity: .5;
+    user-select: none;
+  }
+
   .modal-overlay span {
     font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    font-size: 20px;
+    font-size: 30px;
+    text-align: center;
     color: rgba(255, 255, 255, 0.85);
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   }
@@ -190,13 +206,16 @@
 
   <div class="modal-overlay" id="image-modal-overlay">
     <img id="image-modal-img" src="" alt="">
+    <div class="modal-close">&times;</div>
   </div>
 
   <div class="modal-overlay" id="message-modal-overlay">
     <span id="message-modal-text"></span>
+    <div class="modal-close">&times;</div>
   </div>
 
 <script>
+  const CACHE_NAME = 'static-cache-v1';
   const QUERY_STRING = window.location.search;
   const URL_PARAMS = new URLSearchParams(QUERY_STRING);
   const CONFIG_NAME = URL_PARAMS.get('cfg');
@@ -256,6 +275,30 @@
     overlay.classList.remove("open");
   }
 
+  async function checkResourceCacheStatus(resourceUrl) {
+    const absoluteUrl = new URL(resourceUrl, document.baseURI);
+    console.log(absoluteUrl.href);
+
+    const cache = await caches.open(CACHE_NAME);
+    
+    // Get all Request objects in this cache
+    const requests = await cache.keys();
+    
+    return requests.some(request => request.url == absoluteUrl);
+  }
+
+  function setOfflineMode() {
+    for (e of document.getElementsByClassName('panel')) {
+      e.classList.add('offline');
+    }
+  }
+
+  function setOnlineMode() {
+    for (e of document.getElementsByClassName('panel')) {
+      e.classList.remove('offline');
+    }
+  }
+
   document.getElementById("image-modal-overlay").addEventListener("click", closeImageModal);
   document.getElementById("message-modal-overlay").addEventListener("click", closeMessageModal);
 
@@ -273,17 +316,19 @@
       isReachable = true;
       const contentType = res.headers.get("Content-Type") || "";
       isImage = contentType.toLowerCase().startsWith("image/");
+      setOfflineMode();
     } catch (err) {
       // HEAD request failed (e.g. blocked by CORS, or the server doesn't support it).
       // Fall back to treating it as a normal link.
       isImage = false;
       isReachable = false;
+      setOnlineMode();
     } finally {
       clearTimeout(timeout);
     }
 
     if (!isReachable) {
-      openMessageModal("It seems you're offline. Try again later.");
+      openMessageModal("It seems you're offline.<br/>Try again later.");
     } else if (isImage) {
       openImageModal(url);
     } else {
@@ -306,6 +351,14 @@
         a.target = target;
       a.rel = "noopener noreferrer";
       a.addEventListener("click", (event) => handleLinkClick(event, url));
+
+      checkResourceCacheStatus(url)
+        .then((isCached) => {
+          console.log(url + ' -> ' + isCached);
+          if (!isCached) {
+            li.classList.add('not-cached');
+          }
+        });
 
       const iconSpan = document.createElement("span");
       iconSpan.className = "icon";
