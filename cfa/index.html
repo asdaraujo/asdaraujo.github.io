@@ -143,7 +143,7 @@
     color: #ffffff;
   }
 
-  .image-modal-overlay {
+  .modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.85);
@@ -155,15 +155,22 @@
     padding: 24px;
   }
 
-  .image-modal-overlay.open {
+  .modal-overlay.open {
     display: flex;
   }
 
-  .image-modal-overlay img {
+  .modal-overlay img {
     max-width: 90vw;
     max-height: 90vh;
     object-fit: contain;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .modal-overlay span {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   }
 </style>
 </head>
@@ -181,8 +188,12 @@
 
   <div class="attribution" id="attribution"></div>
 
-  <div class="image-modal-overlay" id="image-modal-overlay">
+  <div class="modal-overlay" id="image-modal-overlay">
     <img id="image-modal-img" src="" alt="">
+  </div>
+
+  <div class="modal-overlay" id="message-modal-overlay">
+    <span id="message-modal-text"></span>
   </div>
 
 <script>
@@ -233,25 +244,47 @@
     img.src = "";
   }
 
+  function openMessageModal(text) {
+    const overlay = document.getElementById("message-modal-overlay");
+    const span = document.getElementById("message-modal-text");
+    span.innerHTML = text;
+    overlay.classList.add("open");
+  }
+
+  function closeMessageModal() {
+    const overlay = document.getElementById("message-modal-overlay");
+    overlay.classList.remove("open");
+  }
+
   document.getElementById("image-modal-overlay").addEventListener("click", closeImageModal);
+  document.getElementById("message-modal-overlay").addEventListener("click", closeMessageModal);
 
   async function handleLinkClick(event, url) {
     event.preventDefault();
 
-    console.log('EVENT');
-    console.log(event);
+    const timeoutMs = 5000;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
     let isImage = false;
+    let isReachable = false;
     try {
-      const res = await fetch(url, { method: "HEAD" });
+      const res = await fetch(url, { method: "HEAD", mode: 'no-cors', signal: controller.signal });
+      isReachable = true;
       const contentType = res.headers.get("Content-Type") || "";
       isImage = contentType.toLowerCase().startsWith("image/");
     } catch (err) {
       // HEAD request failed (e.g. blocked by CORS, or the server doesn't support it).
       // Fall back to treating it as a normal link.
       isImage = false;
+      isReachable = false;
+    } finally {
+      clearTimeout(timeout);
     }
 
-    if (isImage) {
+    if (!isReachable) {
+      openMessageModal("It seems you're offline. Try again later.");
+    } else if (isImage) {
       openImageModal(url);
     } else {
       const target = event.target.parentElement.target;
@@ -263,7 +296,6 @@
     const list = document.getElementById("link-list");
     list.innerHTML = "";
 
-    console.log(links);
     links.forEach(({ text, url, icon, target }) => {
       const li = document.createElement("li");
       const a = document.createElement("a");
