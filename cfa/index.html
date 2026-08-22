@@ -275,7 +275,7 @@
     overlay.classList.remove("open");
   }
 
-  async function checkResourceCacheStatus(resourceUrl) {
+  async function isResourceCached(resourceUrl) {
     const absoluteUrl = new URL(resourceUrl, document.baseURI);
     console.log(absoluteUrl.href);
 
@@ -351,9 +351,18 @@
 //    event.target.dispatchEvent(mouseUpEvent);
   }
 
+  async function test() {
+    const cache = await caches.open(CACHE_NAME);
+    const requests = await cache.keys();
+    for (r of requests) { console.log('Cache entry: ' + r.url); }
+    return true;
+  }
+
   function renderLinks(links) {
     const list = document.getElementById("link-list");
     list.innerHTML = "";
+
+    test().then((x) => console.log('done'));
 
     links.forEach(({ text, url, icon, target }) => {
       const li = document.createElement("li");
@@ -368,7 +377,7 @@
       a.addEventListener('mouseenter', () => a.classList.add('is-hovered'));
       a.addEventListener('mouseleave', () => a.classList.remove('is-hovered'));
 
-      checkResourceCacheStatus(url)
+      isResourceCached(url)
         .then((isCached) => {
           console.log(url + ' -> ' + isCached);
           if (!isCached) {
