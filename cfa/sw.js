@@ -1,4 +1,21 @@
+importScripts('https://cdn.jsdelivr.net/npm/idb@8/build/umd.js');
+
 const CACHE_NAME = 'static-cache-v1';
+
+const dbPromise = idb.openDB('app-state', 1, {
+  upgrade(db) {
+    db.createObjectStore('state');
+  },
+});
+
+async function getState(key) {
+  return (await dbPromise).get('state', key);
+}
+
+async function setState(key, value) {
+  return (await dbPromise).put('state', value, key);
+}
+
 
 // List all the local files you want to force-cache for offline use
 const ASSETS_TO_CACHE = [
@@ -37,8 +54,15 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             // Return the cached file if found, otherwise make a network request
-            return cachedResponse || fetch(event.request);
+            if (cachedResponse) {
+              return cachedResponse;
+            } else {
+              const resp = fetch(event.request);
+              setState('offline', false);
+              return resp;
+            }
         }).catch(() => {
+            setState('offline', true);
             // Optional: Fallback if both cache and network fail (offline)
             if (event.request.mode === 'navigate') {
                 return caches.match('/index.html');

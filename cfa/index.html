@@ -95,7 +95,7 @@
     transform: translateX(4px);
   }
 
-  div.panel.offline ul.link-list li.not-cached a {
+  div.panel.offline ul.link-list a.not-cached {
     opacity: 0.5;
   }
 
@@ -214,12 +214,27 @@
     <div class="modal-close">&times;</div>
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/idb@8/build/umd.js"></script>
 <script>
   const CACHE_NAME = 'static-cache-v1';
   const QUERY_STRING = window.location.search;
   const URL_PARAMS = new URLSearchParams(QUERY_STRING);
   const CONFIG_NAME = URL_PARAMS.get('cfg');
   const CONFIG_URL = CONFIG_NAME + '.json';
+
+  const dbPromise = idb.openDB('app-state', 1, {
+    upgrade(db) {
+      db.createObjectStore('state');
+    },
+  });
+
+  async function getState(key) {
+    return (await dbPromise).get('state', key);
+  }
+
+  async function setState(key, value) {
+    return (await dbPromise).put('state', value, key);
+  }
 
   function isImageIcon(icon) {
     return /^https?:\/\//i.test(icon) || /\.(png|jpe?g|svg|gif|webp)$/i.test(icon);
@@ -277,8 +292,6 @@
 
   async function isResourceCached(resourceUrl) {
     const absoluteUrl = new URL(resourceUrl, document.baseURI);
-    console.log(absoluteUrl.href);
-
     const cache = await caches.open(CACHE_NAME);
     
     // Get all Request objects in this cache
@@ -287,18 +300,42 @@
     return requests.some(request => request.url == absoluteUrl);
   }
 
-  function setOfflineMode() {
-    for (e of document.getElementsByClassName('panel')) {
-      e.classList.add('offline');
-    }
+  function refreshLinks() {
+    getState('offline').then((isOffline) => {
+      for (e of document.getElementsByClassName('panel')) {
+        if (isOffline) {
+          e.classList.add('offline');
+        } else {
+          e.classList.remove('offline');
+        }
+      }
+    });
   }
 
   function setOnlineMode() {
-    for (e of document.getElementsByClassName('panel')) {
-      e.classList.remove('offline');
-    }
+    setState('offline', false).then(() => refreshLinks());
   }
 
+  function setOfflineMode() {
+    setState('offline', true).then(() => refreshLinks());
+    ping();
+  }
+
+  function ping() {
+    const pingFreqMs = 1000;
+    const timeoutMs = 3000;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    //const pingUrl = 'http://asdaraujo.github.io/cfa/'; // for test only
+    const pingUrl = 'ping';
+    fetch(pingUrl, { method: 'HEAD', signal: controller.signal }).then((result) => {
+      setOnlineMode();
+    }).catch(() => {
+      setTimeout(ping, pingFreqMs);
+    }).finally(() => {
+      clearTimeout(timeout);
+    });
+  }
   document.getElementById("image-modal-overlay").addEventListener("click", closeImageModal);
   document.getElementById("message-modal-overlay").addEventListener("click", closeMessageModal);
 
@@ -317,12 +354,13 @@
     let isReachable = false;
     let msg = '';
     try {
-      console.log('META');
       const res = await fetch(url, { method: "HEAD", mode: 'no-cors', signal: controller.signal });
       isReachable = true;
+      if (link.classList.contains('not-cached')) {
+        setOnlineMode();
+      }
       const contentType = res.headers.get("Content-Type") || "";
       isImage = contentType.toLowerCase().startsWith("image/");
-      setOnlineMode();
     } catch (err) {
       // HEAD request failed (e.g. blocked by CORS, or the server doesn't support it).
       // Fall back to treating it as a normal link.
@@ -341,29 +379,11 @@
     } else {
       window.open(url, link.target, "noopener,noreferrer");
     }
-
-//    console.log(event.target);
-//    console.log(event.target.parentElement);
-//    const mouseUpEvent = new MouseEvent('mouseup', {
-//      bubbles: true,
-//      cancelable: true,
-//      view: window
-//    });
-//    event.target.dispatchEvent(mouseUpEvent);
-  }
-
-  async function test() {
-    const cache = await caches.open(CACHE_NAME);
-    const requests = await cache.keys();
-    for (r of requests) { console.log('Cache entry: ' + r.url); }
-    return true;
   }
 
   function renderLinks(links) {
     const list = document.getElementById("link-list");
     list.innerHTML = "";
-
-    test().then((x) => console.log('done'));
 
     links.forEach(({ text, url, icon, target }) => {
       const li = document.createElement("li");
@@ -380,9 +400,8 @@
 
       isResourceCached(url)
         .then((isCached) => {
-          console.log(url + ' -> ' + isCached);
           if (!isCached) {
-            li.classList.add('not-cached');
+            a.classList.add('not-cached');
           }
         });
 
