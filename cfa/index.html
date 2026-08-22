@@ -316,13 +316,13 @@
       isReachable = true;
       const contentType = res.headers.get("Content-Type") || "";
       isImage = contentType.toLowerCase().startsWith("image/");
-      setOfflineMode();
+      setOnlineMode();
     } catch (err) {
       // HEAD request failed (e.g. blocked by CORS, or the server doesn't support it).
       // Fall back to treating it as a normal link.
       isImage = false;
       isReachable = false;
-      setOnlineMode();
+      setOfflineMode();
     } finally {
       clearTimeout(timeout);
     }
