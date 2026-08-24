@@ -188,6 +188,155 @@
     color: rgba(255, 255, 255, 0.85);
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   }
+
+  .settings-gear-btn {
+    position: fixed;
+    right: 14px;
+    bottom: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+    transition: background 0.15s ease, transform 0.2s ease;
+  }
+
+  .settings-gear-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: rotate(25deg);
+  }
+
+  #settings-modal-overlay.open {
+    gap: 20px;
+    cursor: default;
+  }
+
+  .settings-panel {
+    width: 100%;
+    max-width: 360px;
+    max-height: 75vh;
+    background: #1e1f24;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  .settings-listbox {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    flex: 1 1 auto;
+  }
+
+  .settings-empty {
+    padding: 20px 16px;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .settings-item {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .settings-item-delete {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 84px;
+    border: none;
+    background: #c0392b;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .settings-item-content {
+    position: relative;
+    background: #1e1f24;
+    padding: 14px 16px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: #f2f2f2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s ease;
+    touch-action: pan-y;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  .settings-item-tick {
+    flex: 0 0 auto;
+    width: 18px;
+    color: #2ecc71;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .settings-item-text {
+    flex: 1 1 auto;
+  }
+
+  .settings-add-row {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: #1e1f24;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .settings-add-row input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 10px 12px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    background: #2a2c33;
+    color: #f2f2f2;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+  }
+
+  .settings-add-row input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .settings-add-row button {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    border: none;
+    background: #3a6df0;
+    color: #ffffff;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .settings-add-row button:disabled {
+    background: #454858;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: not-allowed;
+  }
 </style>
 </head>
 <body>
@@ -214,27 +363,27 @@
     <div class="modal-close">&times;</div>
   </div>
 
-<script src="lib/umd.js"></script>
+  <button class="settings-gear-btn" id="settings-gear-btn" title="Settings" aria-label="Settings">&#9881;</button>
+
+  <div class="modal-overlay" id="settings-modal-overlay">
+    <div class="settings-panel" id="settings-panel">
+      <ul class="settings-listbox" id="settings-listbox">
+        <!-- Items are injected here -->
+      </ul>
+      <div class="settings-add-row">
+        <input type="text" id="settings-new-item" placeholder="Add item…" autocomplete="off">
+        <button id="settings-add-btn" disabled>+</button>
+      </div>
+    </div>
+    <div class="modal-close" id="settings-close-btn">&times;</div>
+  </div>
+
+<script src="./lib/app-state.js"></script>
 <script>
   const CACHE_NAME = 'static-cache-v1';
   const QUERY_STRING = window.location.search;
-  const URL_PARAMS = new URLSearchParams(QUERY_STRING);
-  const CONFIG_NAME = URL_PARAMS.get('cfg');
-  const CONFIG_URL = CONFIG_NAME + '.json';
-
-  const dbPromise = idb.openDB('app-state', 1, {
-    upgrade(db) {
-      db.createObjectStore('state');
-    },
-  });
-
-  async function getState(key) {
-    return (await dbPromise).get('state', key);
-  }
-
-  async function setState(key, value) {
-    return (await dbPromise).put('state', value, key);
-  }
+  //const URL_PARAMS = new URLSearchParams(QUERY_STRING);
+  const DEFAULT_CONFIG_NAME = 'basic';
 
   function isImageIcon(icon) {
     return /^https?:\/\//i.test(icon) || /\.(png|jpe?g|svg|gif|webp)$/i.test(icon);
@@ -293,15 +442,15 @@
   async function isResourceCached(resourceUrl) {
     const absoluteUrl = new URL(resourceUrl, document.baseURI);
     const cache = await caches.open(CACHE_NAME);
-    
+
     // Get all Request objects in this cache
     const requests = await cache.keys();
-    
+
     return requests.some(request => request.url == absoluteUrl);
   }
 
   function refreshLinks() {
-    getState('offline').then((isOffline) => {
+    appState.get('offline').then((isOffline) => {
       for (e of document.getElementsByClassName('panel')) {
         if (isOffline) {
           e.classList.add('offline');
@@ -313,11 +462,11 @@
   }
 
   function setOnlineMode() {
-    setState('offline', false).then(() => refreshLinks());
+    appState.set('offline', false).then(() => refreshLinks());
   }
 
   function setOfflineMode() {
-    setState('offline', true).then(() => refreshLinks());
+    appState.set('offline', true).then(() => refreshLinks());
     ping();
   }
 
@@ -505,7 +654,223 @@
     renderAttributionMarkup(photographerName, photographerUrl, photoUrl, unsplashUrl);
   }
 
-  async function init() {
+  // ---- Settings overlay -------------------------------------------------
+  // Items are persisted via the existing appState storage under this key.
+  // Each item is stored as { id, text }; a separate key tracks which item id
+  // is the current "default" item.
+  const SETTINGS_STORAGE_KEY = 'settingsListItems';
+  const SETTINGS_DEFAULT_KEY = 'settingsDefaultItemId';
+  const SWIPE_REVEAL_PX = 84;
+  const SWIPE_OPEN_THRESHOLD_PX = 40;
+  const SWIPE_DRAG_THRESHOLD_PX = 5;
+
+  function generateSettingsItemId() {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+      return window.crypto.randomUUID();
+    }
+    return 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+  }
+
+  async function getSettingsItems() {
+    const items = await appState.get(SETTINGS_STORAGE_KEY, []);
+    return Array.isArray(items) ? items : [];
+  }
+
+  async function saveSettingsItems(items) {
+    await appState.set(SETTINGS_STORAGE_KEY, items);
+  }
+
+  async function getDefaultItemId() {
+    return await appState.get(SETTINGS_DEFAULT_KEY, null);
+  }
+
+  async function setDefaultItemId(id) {
+    await appState.set(SETTINGS_DEFAULT_KEY, id);
+  }
+
+  function closeAllSwipedItems(except) {
+    document.querySelectorAll('.settings-item-content.swiped').forEach((el) => {
+      if (el !== except) {
+        el.classList.remove('swiped');
+        el.style.transform = '';
+      }
+    });
+  }
+
+  function attachSwipeToDelete(contentEl, onDragStart) {
+    let dragging = false;
+    let startX = 0;
+    let baseX = 0;
+
+    function clampX(x) {
+      return Math.max(-SWIPE_REVEAL_PX, Math.min(0, x));
+    }
+
+    contentEl.addEventListener('pointerdown', (event) => {
+      dragging = true;
+      startX = event.clientX;
+      baseX = contentEl.classList.contains('swiped') ? -SWIPE_REVEAL_PX : 0;
+      contentEl.style.transition = 'none';
+      contentEl.setPointerCapture(event.pointerId);
+    });
+
+    contentEl.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      const delta = event.clientX - startX;
+      if (Math.abs(delta) > SWIPE_DRAG_THRESHOLD_PX && onDragStart) {
+        onDragStart();
+      }
+      const next = clampX(baseX + delta);
+      contentEl.style.transform = `translateX(${next}px)`;
+    });
+
+    function endDrag() {
+      if (!dragging) return;
+      dragging = false;
+      contentEl.style.transition = '';
+
+      const match = /translateX\((-?\d+(?:\.\d+)?)px\)/.exec(contentEl.style.transform);
+      const finalX = match ? parseFloat(match[1]) : 0;
+
+      if (finalX <= -SWIPE_OPEN_THRESHOLD_PX) {
+        contentEl.style.transform = `translateX(-${SWIPE_REVEAL_PX}px)`;
+        contentEl.classList.add('swiped');
+        closeAllSwipedItems(contentEl);
+      } else {
+        contentEl.style.transform = '';
+        contentEl.classList.remove('swiped');
+      }
+    }
+
+    contentEl.addEventListener('pointerup', endDrag);
+    contentEl.addEventListener('pointercancel', endDrag);
+  }
+
+  function renderSettingsList(items, defaultId) {
+    const list = document.getElementById('settings-listbox');
+    list.innerHTML = '';
+
+    if (items.length === 0) {
+      const empty = document.createElement('li');
+      empty.className = 'settings-empty';
+      empty.textContent = 'No items yet.';
+      list.appendChild(empty);
+      return;
+    }
+
+    items.forEach((item) => {
+      const isDefault = item.id === defaultId;
+
+      const li = document.createElement('li');
+      li.className = 'settings-item';
+
+      const content = document.createElement('div');
+      content.className = 'settings-item-content';
+
+      const tick = document.createElement('span');
+      tick.className = 'settings-item-tick';
+      tick.textContent = isDefault ? '\u2713' : '';
+
+      const textSpan = document.createElement('span');
+      textSpan.className = 'settings-item-text';
+      textSpan.textContent = item.text;
+
+      content.appendChild(tick);
+      content.appendChild(textSpan);
+
+      let wasDragged = false;
+
+      content.addEventListener('click', async () => {
+        if (wasDragged) {
+          wasDragged = false;
+          return;
+        }
+        if (content.classList.contains('swiped')) {
+          content.classList.remove('swiped');
+          content.style.transform = '';
+          return;
+        }
+        await setDefaultItemId(item.id);
+        closeSettingsModal();
+      });
+
+      // The default item has no delete affordance: no swipe, no delete button.
+      if (!isDefault) {
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'settings-item-delete';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', async (event) => {
+          event.stopPropagation();
+          const currentItems = await getSettingsItems();
+          const filtered = currentItems.filter((i) => i.id !== item.id);
+          await saveSettingsItems(filtered);
+          const currentDefaultId = await getDefaultItemId();
+          renderSettingsList(filtered, currentDefaultId);
+        });
+        li.appendChild(deleteBtn);
+        attachSwipeToDelete(content, () => { wasDragged = true; });
+      }
+
+      li.appendChild(content);
+      list.appendChild(li);
+    });
+  }
+
+  async function loadSettingsList() {
+    const items = await getSettingsItems();
+    const defaultId = await getDefaultItemId();
+    renderSettingsList(items, defaultId);
+  }
+
+  function openSettingsModal() {
+    document.getElementById('settings-modal-overlay').classList.add('open');
+    loadSettingsList();
+  }
+
+  function closeSettingsModal() {
+    document.getElementById('settings-modal-overlay').classList.remove('open');
+  }
+
+  document.getElementById('settings-gear-btn').addEventListener('click', openSettingsModal);
+  document.getElementById('settings-close-btn').addEventListener('click', closeSettingsModal);
+  document.getElementById('settings-modal-overlay').addEventListener('click', closeSettingsModal);
+  // Clicks inside the panel (listbox, input, buttons) must not bubble up
+  // to the overlay's click-to-close handler.
+  document.getElementById('settings-panel').addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
+  const settingsInput = document.getElementById('settings-new-item');
+  const settingsAddBtn = document.getElementById('settings-add-btn');
+
+  settingsInput.addEventListener('input', () => {
+    settingsAddBtn.disabled = settingsInput.value.trim() === '';
+  });
+
+  settingsAddBtn.addEventListener('click', async () => {
+    const text = settingsInput.value.trim();
+    if (!text) return;
+
+    const items = await getSettingsItems();
+    const newItem = { id: generateSettingsItemId(), text };
+    items.push(newItem);
+    await saveSettingsItems(items);
+
+    // The very first item ever added becomes the default.
+    let defaultId = await getDefaultItemId();
+    if (!defaultId) {
+      defaultId = newItem.id;
+      await setDefaultItemId(defaultId);
+    }
+
+    settingsInput.value = '';
+    settingsAddBtn.disabled = true;
+
+    renderSettingsList(items, defaultId);
+  });
+  // ------------------------------------------------------------------------
+
+  async function init(configUrl) {
     // register service worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -517,9 +882,9 @@
 
     const statusEl = document.getElementById("status-message");
     try {
-      const response = await fetch(CONFIG_URL, { cache: "force-cache" });
+      const response = await fetch(configUrl, { cache: "force-cache" });
       if (!response.ok) {
-        throw new Error(`Failed to load ${CONFIG_URL}: ${response.status}`);
+        throw new Error(`Failed to load ${configUrl}: ${response.status}`);
       }
       const config = await response.json();
       setTitle(config.title);
@@ -529,11 +894,18 @@
       await loadAttribution(config.backgroundAttribution);
     } catch (err) {
       console.error(err);
-      statusEl.textContent = "Couldn't load configuration [" + CONFIG_NAME + "].";
+      statusEl.textContent = "Couldn't load configuration [" + configName + "].";
     }
   }
 
-  init();
+  const appState = new self.AppState();
+
+  (async () => {
+    const configName = await appState.get('cfg', DEFAULT_CONFIG_NAME);
+    const configUrl = configName + '.json';
+    init(configUrl);
+  })()
+
 </script>
 
 </body>
