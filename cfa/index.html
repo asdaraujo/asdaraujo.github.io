@@ -189,7 +189,7 @@
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   }
 
-  .settings-gear-btn {
+  .settings-btn {
     position: fixed;
     right: 14px;
     bottom: 12px;
@@ -209,7 +209,7 @@
     transition: background 0.15s ease, transform 0.2s ease;
   }
 
-  .settings-gear-btn:hover {
+  .settings-btn:hover {
     background: rgba(0, 0, 0, 0.6);
     transform: rotate(25deg);
   }
@@ -363,7 +363,7 @@
     <div class="modal-close">&times;</div>
   </div>
 
-  <button class="settings-gear-btn" id="settings-gear-btn" title="Settings" aria-label="Settings">&#9881;</button>
+  <button class="settings-btn" id="settings-gear-btn" title="Settings" aria-label="Settings">&#9881;</button>
 
   <div class="modal-overlay" id="settings-modal-overlay">
     <div class="settings-panel" id="settings-panel">
@@ -376,6 +376,7 @@
       </div>
     </div>
     <div class="modal-close" id="settings-close-btn">&times;</div>
+    <button class="settings-btn" id="settings-refresh-btn" title="Refresh cache" aria-label="Refresh cache">&#8635;</button>
   </div>
 
 <script src="./lib/app-state.js"></script>
@@ -838,6 +839,18 @@
   // to the overlay's click-to-close handler.
   document.getElementById('settings-panel').addEventListener('click', (event) => {
     event.stopPropagation();
+  });
+
+  document.getElementById('settings-refresh-btn').addEventListener('click', (event) => {
+    event.stopPropagation();
+
+    // Ask the active service worker to purge and re-populate its cache.
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ type: 'PURGE_AND_RECACHE' });
+    }
+
+    closeSettingsModal();
+    window.location.reload();
   });
 
   const settingsInput = document.getElementById('settings-new-item');

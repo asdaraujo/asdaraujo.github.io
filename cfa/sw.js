@@ -52,3 +52,18 @@ self.addEventListener('fetch', (event) => {
         })
     );
 });
+
+// 3. Message Event: Let the page ask us to purge the cache and re-fetch
+//    everything fresh from the network. Triggered by the refresh button
+//    in the settings overlay.
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'PURGE_AND_RECACHE') {
+        event.waitUntil(
+            caches.delete(CACHE_NAME)
+                .then(() => caches.open(CACHE_NAME))
+                .then((cache) => cache.addAll(ASSETS_TO_CACHE))
+                .then(() => console.log('Cache purged and re-populated.'))
+                .catch((err) => console.error('Cache purge/recache failed:', err))
+        );
+    }
+});
