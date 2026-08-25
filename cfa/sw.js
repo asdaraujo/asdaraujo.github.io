@@ -1,10 +1,12 @@
+importScripts('./lib/app-state.js');
+
 const CACHE_NAME = 'static-cache-v1';
+const CONFIG_DIR = 'configs';
+const CONFIG_LIST_KEY = 'configListItems';
 
 // List all the local files you want to force-cache for offline use
 const ASSETS_TO_CACHE = [
     self.registration.scope,
-    self.registration.scope + 'configs/basic.json',
-    self.registration.scope + 'configs/qr-codes.json',
     self.registration.scope + 'images/CanIOrCantI.png',
     self.registration.scope + 'images/CentralFDR.png',
     self.registration.scope + 'images/FireRestrictionsDates.png',
@@ -12,13 +14,20 @@ const ASSETS_TO_CACHE = [
     self.registration.scope + 'images/RegisterYourBurnOff.png',
 ];
 
+async function assetsToCache() {
+  const appState = new self.AppState();
+  return appState.get(CONFIG_LIST_KEY).then((items) => ASSETS_TO_CACHE.concat(items.map(i => CONFIG_DIR + '/' + i + '.json')));
+}
+
 // 1. Install Event: Save files to the browser's Cache Storage
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('Pre-caching static assets...');
-            const reloadRequests = ASSETS_TO_CACHE.map(url => new Request(url, { cache: 'reload' }));
-            return cache.addAll(reloadRequests);
+            console.log(assetsToCache());
+            return assetsToCache()
+              .then((items) => items.map(url => new Request(url, { cache: 'reload' })))
+              .then((reloadRequests) => cache.addAll(reloadRequests));
         })
     );
 });
