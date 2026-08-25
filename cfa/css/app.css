@@ -1,0 +1,327 @@
+:root {
+  --text-color: #fff;
+  --accent: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background-color: #333;
+  background-image: var(--bg-image, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 5px 10px;
+}
+
+.bg-luminosity-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  margin: 0 0 12px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  letter-spacing: 0.02em;
+  color: var(--text-color);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+ul.link-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+ul.link-list li a {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  text-decoration: none;
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  margin: 5px 0;
+}
+
+ul.link-list li a.is-hovered {
+  opacity: 0.75;
+  transform: translateX(4px);
+}
+
+div.panel.offline ul.link-list a.not-cached {
+  opacity: 0.5;
+}
+
+ul.link-list li a .icon {
+  flex: 0 0 auto;
+  font-size: 1em;
+  line-height: 1;
+  width: 1.1em;
+  text-align: center;
+}
+
+ul.link-list li a .icon img {
+  width: 1em;
+  height: 1em;
+  display: block;
+  object-fit: contain;
+}
+
+ul.link-list li a .text {
+  flex: 1 1 auto;
+}
+
+.status-message {
+  text-align: center;
+  color: #ffb4b4;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  margin-top: 16px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.attribution {
+  position: fixed;
+  left: 12px;
+  bottom: 10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.attribution a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.attribution a:hover {
+  color: #ffffff;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  padding: 24px;
+}
+
+.modal-overlay.open {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.modal-overlay img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.modal-close {
+  font-family: 'Roboto', sans-serif;
+  font-size: 60px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.5);
+  opacity: .5;
+  user-select: none;
+}
+
+.modal-overlay span {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 30px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.configs-btn {
+  position: fixed;
+  right: 14px;
+  bottom: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: background 0.15s ease, transform 0.2s ease;
+}
+
+.configs-btn:hover {
+  background: rgba(0, 0, 0, 0.6);
+  transform: rotate(25deg);
+}
+
+#configs-modal-overlay.open {
+  gap: 20px;
+  cursor: default;
+}
+
+.configs-panel {
+  width: 100%;
+  max-width: 360px;
+  max-height: 75vh;
+  background: #1e1f24;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: default;
+}
+
+.configs-listbox {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+.configs-empty {
+  padding: 20px 16px;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.configs-item {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.configs-item-delete {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 84px;
+  border: none;
+  background: #c0392b;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.configs-item-content {
+  position: relative;
+  background: #1e1f24;
+  padding: 14px 16px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: #f2f2f2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.2s ease;
+  touch-action: pan-y;
+  user-select: none;
+  cursor: pointer;
+}
+
+.configs-item-tick {
+  flex: 0 0 auto;
+  width: 18px;
+  color: #2ecc71;
+  font-size: 16px;
+  text-align: center;
+}
+
+.configs-item-text {
+  flex: 1 1 auto;
+}
+
+.configs-add-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background: #1e1f24;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.configs-add-row input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 10px 12px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  background: #2a2c33;
+  color: #f2f2f2;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+}
+
+.configs-add-row input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.configs-add-row button {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: none;
+  background: #3a6df0;
+  color: #ffffff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.configs-add-row button:disabled {
+  background: #454858;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: not-allowed;
+}

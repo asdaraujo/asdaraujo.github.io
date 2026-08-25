@@ -70,8 +70,6 @@ self.addEventListener('message', (event) => {
                 .then(() => {
                   console.log('Cache purged and re-populated.');
                   if (event.source) {
-                    console.log('EVENT SOURCE:');
-                    console.log(event.source);
                     event.source.postMessage({ type: 'REFRESH_APP' });
                   }
                 })
