@@ -384,6 +384,7 @@
   const CACHE_NAME = 'static-cache-v1';
   const QUERY_STRING = window.location.search;
   //const URL_PARAMS = new URLSearchParams(QUERY_STRING);
+  const CONFIG_DIR = 'configs';
   const DEFAULT_CONFIG_NAME = 'basic';
 
   function isImageIcon(icon) {
@@ -914,8 +915,13 @@
   const appState = new self.AppState();
 
   (async () => {
-    const configName = await appState.get('cfg', DEFAULT_CONFIG_NAME);
-    const configUrl = configName + '.json';
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    let configName = urlParams.get('cfg');
+    if (!configName) {
+      configName = await appState.get('cfg', DEFAULT_CONFIG_NAME);
+    }
+    const configUrl = CONFIG_DIR + '/' + configName + '.json';
     init(configUrl);
   })()
 

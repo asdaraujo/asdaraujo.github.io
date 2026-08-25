@@ -2,16 +2,14 @@ const CACHE_NAME = 'static-cache-v1';
 
 // List all the local files you want to force-cache for offline use
 const ASSETS_TO_CACHE = [
-    self.registration.scope + '?cfg=warb',
-    self.registration.scope + '?cfg=qr-codes',
-    self.registration.scope + 'warb.json',
-    self.registration.scope + 'qr-codes.json',
+    self.registration.scope,
+    self.registration.scope + 'configs/basic.json',
+    self.registration.scope + 'configs/qr-codes.json',
     self.registration.scope + 'images/CanIOrCantI.png',
     self.registration.scope + 'images/CentralFDR.png',
     self.registration.scope + 'images/FireRestrictionsDates.png',
     self.registration.scope + 'images/FireSafetyTranslations.png',
     self.registration.scope + 'images/RegisterYourBurnOff.png',
-    self.registration.scope + 'lib/umd.js',
 ];
 
 // 1. Install Event: Save files to the browser's Cache Storage
@@ -19,7 +17,7 @@ self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('Pre-caching static assets...');
-            return cache.addAll(ASSETS_TO_CACHE);
+            return cache.addAll(ASSETS_TO_CACHE, { ignoreSearch: true });
         })
     );
 });
@@ -61,7 +59,7 @@ self.addEventListener('message', (event) => {
         event.waitUntil(
             caches.delete(CACHE_NAME)
                 .then(() => caches.open(CACHE_NAME))
-                .then((cache) => cache.addAll(ASSETS_TO_CACHE))
+                .then((cache) => cache.addAll(ASSETS_TO_CACHE, { ignoreSearch: true }))
                 .then(() => console.log('Cache purged and re-populated.'))
                 .catch((err) => console.error('Cache purge/recache failed:', err))
         );
