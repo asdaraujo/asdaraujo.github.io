@@ -17,7 +17,8 @@ self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('Pre-caching static assets...');
-            return cache.addAll(ASSETS_TO_CACHE, { ignoreSearch: true });
+            const reloadRequests = ASSETS_TO_CACHE.map(url => new Request(url, { cache: 'reload' }));
+            return cache.addAll(reloadRequests);
         })
     );
 });
@@ -39,7 +40,7 @@ self.addEventListener('fetch', (event) => {
     }
 
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
+        caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
             // Return the cached file if found, otherwise make a network request
             if (cachedResponse) {
               return cachedResponse;
@@ -64,7 +65,7 @@ self.addEventListener('message', (event) => {
         event.waitUntil(
             caches.delete(CACHE_NAME)
                 .then(() => caches.open(CACHE_NAME))
-                .then((cache) => cache.addAll(ASSETS_TO_CACHE, { ignoreSearch: true }))
+                .then((cache) => cache.addAll(ASSETS_TO_CACHE))
                 .then(() => {
                   console.log('Cache purged and re-populated.');
                   if (event.source) {
