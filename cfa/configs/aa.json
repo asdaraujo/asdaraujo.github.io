@@ -37,24 +37,40 @@
         "icon": "🌡️"
       },
       {
-        "url": "https://2t77btxt4j8crsjn.launchpad.cfapps.ap10.hana.ondemand.com/site?siteId=eb2d953f-7dbe-4ad9-947d-2b52dc110ae5#Shell-home",
-        "text": "Digital Store",
-        "icon": "🛒"
-      },
-      {
         "url": "https://www.cfa.vic.gov.au/about-us/publications/fire-safety-translations",
         "text": "Translations",
         "icon": "🌐"
       },
       {
-        "url": "https://vicpagers.net.au",
-        "text": "VicPagers",
-        "icon": null
-      },
-      {
         "url": "https://www.google.com/maps/d/edit?mid=19AIAarVsHU28p7M24K3t8Vty4LtMr0s&ll=-37.74348186016503%2C145.72051899999997&z=12",
         "text": "Water Points",
         "icon": "🚩"
+      },
+      {
+        "url": "?cfg=qr-codes",
+        "text": "QR Codes",
+        "icon": "🔗",
+        "target": "_self"
+      },
+      {
+        "url": "https://applications.cfa.vic.gov.au/mycfa/Show?pageId=communicationObservations",
+        "text": "Radio Observation Reporting",
+        "icon": "📟"
+      },
+      {
+        "url": "https://viccfa.sharepoint.com/sites/District13-AllStaff-/Operations/Forms/AllItems.aspx?id=%2Fsites%2FDistrict13%2DAllStaff%2D%2FOperations%2FPreparedness%2FOperations%20Folder%20%2D%20vehicle%2FD13%20Operations%20Folder%2Epdf&parent=%2Fsites%2FDistrict13%2DAllStaff%2D%2FOperations%2FPreparedness%2FOperations%20Folder%20%2D%20vehicle&p=true&ga=1",
+        "text": "D13 Operations Folder",
+        "icon": "📂"
+      },
+      {
+        "url": "https://2t77btxt4j8crsjn.launchpad.cfapps.ap10.hana.ondemand.com/site?siteId=eb2d953f-7dbe-4ad9-947d-2b52dc110ae5#Shell-home",
+        "text": "Digital Store",
+        "icon": "🛒"
+      },
+      {
+        "url": "https://vicpagers.net.au",
+        "text": "VicPagers",
+        "icon": null
       },
       {
         "url": "https://www.members.cfa.vic.gov.au/portfolios/chief-officer-and-service-delivery/regions/north-east-region/region-documents/district-13-ner-documents",
@@ -70,11 +86,6 @@
         "url": "https://www.firefighterclimb.org.au/climber/andrearaujo/",
         "text": "MFSC 2026",
         "icon": null
-      },
-      {
-        "url": "?cfg=qr-codes",
-        "text": "QR Codes",
-        "icon": "🔗"
       }
   ]
 }

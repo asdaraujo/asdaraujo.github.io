@@ -1,7 +1,7 @@
 {
-  "title": "QR Codes",
-  "xbackgroundImage": "https://images.unsplash.com/photo-1615092296061-e2ccfeb2f3d6?auto=format&fit=crop&w=1950&q=80",
-  "xbackgroundAttribution": {
+  "title": "More Links",
+  "backgroundImage": "https://images.unsplash.com/photo-1615092296061-e2ccfeb2f3d6?auto=format&fit=crop&w=1950&q=80",
+  "backgroundAttribution": {
     "photographerName": "Matt Palmer",
     "photographerUrl": "https://unsplash.com/@mattpalmer?utm_source=quick_links_app&utm_medium=referral",
     "photoUrl": "https://unsplash.com/photos/wildfire-burning-across-hillside-at-dusk-kbTp7dBzHyY?utm_source=quick_links_app&utm_medium=referral",
@@ -12,29 +12,80 @@
   "backgroundLuminosity": -0.3,
   "links": [
       {
-        "url": "images/CanIOrCantI.png",
-        "text": "Can I or Can't I?",
-        "icon": "❓"
+        "url": "https://www.members.cfa.vic.gov.au/",
+        "text": "Members Online ",
+        "icon": null
       },
       {
-        "url": "images/FireSafetyTranslations.png",
-        "text": "Fire Safety Translations",
-        "icon": "🌐"
+        "url": "https://learninghub.cfa.vic.gov.au/ui/learn/current?menuId=30649237&locale=en-GB",
+        "text": "Learning Hub",
+        "icon": "📚"
       },
       {
-        "url": "images/CentralFDR.png",
+        "url": "https://mapsonline.cfa.vic.gov.au/Html5Viewer/index.html?viewer=MOLViewer10.MOL_Viewer",
+        "text": "Maps Online",
+        "icon": "🧭"
+      },
+      {
+        "url": "https://www.broadcastify.com/listen/feed/18999",
+        "text": "Broadcastify",
+        "icon": null
+      },
+      {
+        "url": "https://www.cfa.vic.gov.au/warnings-restrictions/fire-bans-ratings-and-restrictions/total-fire-bans-fire-danger-ratings/central-fire-district",
         "text": "Central District FDR",
         "icon": "🌡️"
       },
       {
-        "url": "images/FireRestrictionsDates.png",
-        "text": "Fire Restriction Dates",
-        "icon": "🗓️"
+        "url": "https://www.cfa.vic.gov.au/about-us/publications/fire-safety-translations",
+        "text": "Translations",
+        "icon": "🌐"
       },
       {
-        "url": "images/RegisterYourBurnOff.png",
-        "text": "Register Your Burn Off",
-        "icon": "🔥"
+        "url": "https://www.google.com/maps/d/edit?mid=19AIAarVsHU28p7M24K3t8Vty4LtMr0s&ll=-37.74348186016503%2C145.72051899999997&z=12",
+        "text": "Water Points",
+        "icon": "🚩"
+      },
+      {
+        "url": "?cfg=qr-codes",
+        "text": "QR Codes",
+        "icon": "🔗",
+        "target": "_self"
+      },
+      {
+        "url": "https://applications.cfa.vic.gov.au/mycfa/Show?pageId=communicationObservations",
+        "text": "Radio Observation Reporting",
+        "icon": "📟"
+      },
+      {
+        "url": "https://viccfa.sharepoint.com/sites/District13-AllStaff-/Operations/Forms/AllItems.aspx?id=%2Fsites%2FDistrict13%2DAllStaff%2D%2FOperations%2FPreparedness%2FOperations%20Folder%20%2D%20vehicle%2FD13%20Operations%20Folder%2Epdf&parent=%2Fsites%2FDistrict13%2DAllStaff%2D%2FOperations%2FPreparedness%2FOperations%20Folder%20%2D%20vehicle&p=true&ga=1",
+        "text": "D13 Operations Folder",
+        "icon": "📂"
+      },
+      {
+        "url": "https://2t77btxt4j8crsjn.launchpad.cfapps.ap10.hana.ondemand.com/site?siteId=eb2d953f-7dbe-4ad9-947d-2b52dc110ae5#Shell-home",
+        "text": "Digital Store",
+        "icon": "🛒"
+      },
+      {
+        "url": "https://vicpagers.net.au",
+        "text": "VicPagers",
+        "icon": null
+      },
+      {
+        "url": "https://www.members.cfa.vic.gov.au/portfolios/chief-officer-and-service-delivery/regions/north-east-region/region-documents/district-13-ner-documents",
+        "text": "D13 NER Docs",
+        "icon": "📄"
+      },
+      {
+        "url": "https://gist.github.com/asdaraujo/0e85211373e89f019fd22c894de299d5/raw/86d6f35045d799a4488c1fbf548c8b384830f61f/welfare-check-pager.user.js",
+        "text": "TM: Welfare Check Pager",
+        "icon": null
+      },
+      {
+        "url": "https://www.firefighterclimb.org.au/climber/andrearaujo/",
+        "text": "MFSC 2026",
+        "icon": null
       }
   ]
 }
