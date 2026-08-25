@@ -24,7 +24,6 @@ self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('Pre-caching static assets...');
-            console.log(assetsToCache());
             return assetsToCache()
               .then((items) => items.map(url => new Request(url, { cache: 'reload' })))
               .then((reloadRequests) => cache.addAll(reloadRequests));
@@ -70,12 +69,16 @@ self.addEventListener('fetch', (event) => {
 //    everything fresh from the network. Triggered by the refresh button
 //    in the settings overlay.
 self.addEventListener('message', (event) => {
-    const reloadRequests = ASSETS_TO_CACHE.map(url => new Request(url, { cache: 'reload' }));
     if (event.data && event.data.type === 'PURGE_AND_RECACHE') {
         event.waitUntil(
             caches.delete(CACHE_NAME)
                 .then(() => caches.open(CACHE_NAME))
-                .then((cache) => cache.addAll(reloadRequests))
+                .then((cache) => {
+                  console.log('Reloading static assets...');
+                  return assetsToCache()
+                    .then((items) => items.map(url => new Request(url, { cache: 'reload' })))
+                    .then((reloadRequests) => cache.addAll(reloadRequests));
+                })
                 .then(() => {
                   console.log('Cache purged and re-populated.');
                   if (event.source) {
