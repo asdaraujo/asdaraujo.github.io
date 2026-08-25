@@ -19,8 +19,9 @@ async function assetsToCache() {
   return appState.get(CONFIG_LIST_KEY).then((items) => ASSETS_TO_CACHE.concat(items.map(i => CONFIG_DIR + '/' + i + '.json')));
 }
 
-// 1. Install Event: Save files to the browser's Cache Storage
+// Install Event: Save files to the browser's Cache Storage
 self.addEventListener('install', (event) => {
+    self.skipWaiting(); // activate this worker as soon as it finishes installing
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('Pre-caching static assets...');
@@ -32,11 +33,10 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('SW: Claiming client...');
-  event.waitUntil(self.clients.claim()); 
+  event.waitUntil(self.clients.claim());
 });
 
-// 2. Fetch Event: Intercept requests and serve from cache first
+// Fetch Event: Intercept requests and serve from cache first
 self.addEventListener('fetch', (event) => {
     const url = event.request.url;
 
@@ -65,9 +65,9 @@ self.addEventListener('fetch', (event) => {
     );
 });
 
-// 3. Message Event: Let the page ask us to purge the cache and re-fetch
-//    everything fresh from the network. Triggered by the refresh button
-//    in the settings overlay.
+// Message Event: Let the page ask us to purge the cache and re-fetch
+// everything fresh from the network. Triggered by the refresh button
+// in the settings overlay.
 self.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'PURGE_AND_RECACHE') {
         event.waitUntil(

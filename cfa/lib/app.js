@@ -71,6 +71,24 @@ function applyLuminosity(luminosity) {
   overlay.style.backgroundColor = `rgba(${color}, ${opacity})`;
 }
 
+function waitForServiceWorkerController(timeoutMs = 3000) {
+  return new Promise((resolve) => {
+    if (navigator.serviceWorker.controller) {
+      resolve(navigator.serviceWorker.controller);
+      return;
+    }
+    const onChange = () => {
+      navigator.serviceWorker.removeEventListener('controllerchange', onChange);
+      resolve(navigator.serviceWorker.controller);
+    };
+    navigator.serviceWorker.addEventListener('controllerchange', onChange);
+    setTimeout(() => {
+      navigator.serviceWorker.removeEventListener('controllerchange', onChange);
+      resolve(navigator.serviceWorker.controller); // may still be null if SW never took control
+    }, timeoutMs);
+  });
+}
+
 // Modals
 
 function openImageModal(url) {
@@ -452,12 +470,14 @@ function registerListeners() {
   // Clicks inside the panel (listbox, input, buttons) must not bubble up to the overlay's click-to-close handler.
   document.getElementById('configs-panel').addEventListener('click', (event) => { event.stopPropagation(); });
   
-  document.getElementById('refresh-btn').addEventListener('click', (event) => {
+  document.getElementById('refresh-btn').addEventListener('click', async (event) => {
     event.stopPropagation();
-  
+
+    const controller = (navigator.serviceWorker && navigator.serviceWorker.controller) || await waitForServiceWorkerController();
+
     // Ask the active service worker to purge and re-populate its cache.
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({ type: 'PURGE_AND_RECACHE' });
+    if (controller) {
+      controller.postMessage({ type: 'PURGE_AND_RECACHE' });
     }
   
     closeSettingsModal();
