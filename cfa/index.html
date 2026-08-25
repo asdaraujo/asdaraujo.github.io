@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --text-color: #ff0000;
+    --text-color: #f00;
     --accent: #ffffff;
   }
 
@@ -847,13 +847,20 @@
 
     // Ask the active service worker to purge and re-populate its cache.
     if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      console.log(navigator.serviceWorker.controller);
       navigator.serviceWorker.controller.postMessage({ type: 'PURGE_AND_RECACHE' });
     }
 
     closeSettingsModal();
-    window.location.reload();
+    //window.location.reload();
   });
 
+  navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'REFRESH_APP') {
+         console.log('App refreshed');
+         window.location.reload(); 
+      }
+  });
   const settingsInput = document.getElementById('settings-new-item');
   const settingsAddBtn = document.getElementById('settings-add-btn');
 
@@ -881,6 +888,11 @@
     settingsAddBtn.disabled = true;
 
     renderSettingsList(items, defaultId);
+  });
+
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    console.log('Service worker has taken control!');
+    // Re-run any setup logic that depends on navigator.serviceWorker.controller
   });
   // ------------------------------------------------------------------------
 

@@ -22,6 +22,11 @@ self.addEventListener('install', (event) => {
     );
 });
 
+self.addEventListener('activate', (event) => {
+  console.log('SW: Claiming client...');
+  event.waitUntil(self.clients.claim()); 
+});
+
 // 2. Fetch Event: Intercept requests and serve from cache first
 self.addEventListener('fetch', (event) => {
     const url = event.request.url;
@@ -60,7 +65,14 @@ self.addEventListener('message', (event) => {
             caches.delete(CACHE_NAME)
                 .then(() => caches.open(CACHE_NAME))
                 .then((cache) => cache.addAll(ASSETS_TO_CACHE, { ignoreSearch: true }))
-                .then(() => console.log('Cache purged and re-populated.'))
+                .then(() => {
+                  console.log('Cache purged and re-populated.');
+                  if (event.source) {
+                    console.log('EVENT SOURCE:');
+                    console.log(event.source);
+                    event.source.postMessage({ type: 'REFRESH_APP' });
+                  }
+                })
                 .catch((err) => console.error('Cache purge/recache failed:', err))
         );
     }
