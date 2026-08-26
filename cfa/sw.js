@@ -69,7 +69,7 @@ self.addEventListener('fetch', (event) => {
     }
 
     event.respondWith(
-        caches.match(event.request, { ignoreSearch: true, ignoreVary: true }).then((cachedResponse) => {
+        caches.match(event.request, { ignoreSearch: true, ignoreVary: true, ignoreMethod: true }).then((cachedResponse) => {
             if (!url.includes('ping')) {
                 listCacheEntries();
             }
