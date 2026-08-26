@@ -470,8 +470,11 @@ function registerListeners() {
   document.getElementById('configs-gear-btn').addEventListener('click', openSettingsModal);
   // Clicks inside the panel (listbox, input, buttons) must not bubble up to the overlay's click-to-close handler.
   document.getElementById('configs-panel').addEventListener('click', (event) => { event.stopPropagation(); });
-  
-  document.getElementById('share-btn').addEventListener('click', (event) => { openImageModal('images/QuickLinks.png'); });
+
+  const shareBtn = document.getElementById('share-btn');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', (event) => { openImageModal('images/QuickLinks.png'); });
+  }
   document.getElementById('refresh-btn').addEventListener('click', async (event) => {
     event.stopPropagation();
 
