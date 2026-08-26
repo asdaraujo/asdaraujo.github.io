@@ -144,12 +144,10 @@ function refreshLinks() {
 }
 
 function setOnlineMode() {
-  console.log('SETTING ONLINE MODE');
   appState.set('offline', false).then(() => refreshLinks());
 }
 
 function setOfflineMode() {
-  console.log('SETTING OFFLINE MODE');
   appState.set('offline', true).then(() => refreshLinks());
   ping();
 }
@@ -206,10 +204,7 @@ async function handleLinkClick(event, url) {
   let isReachable = false;
   let msg = '';
   try {
-    console.log('CLIENT URL:' + url);
     const res = await fetch(url, { method: "HEAD", mode: 'no-cors', signal: controller.signal });
-    console.log('CLIENT RESPONSE:');
-    console.log(res);
     isReachable = true;
     if (link.classList.contains('not-cached')) {
       setOnlineMode();
@@ -484,16 +479,12 @@ function registerListeners() {
     event.stopPropagation();
 
     const controller = (navigator.serviceWorker && navigator.serviceWorker.controller) || await waitForServiceWorkerController();
-    console.log('CONTROLLER:');
-    console.log(controller);
 
     // Ask the active service worker to purge and re-populate its cache.
     if (controller) {
-      console.log("FOUND CONTROLLER");
       controller.postMessage({ type: 'PURGE_AND_RECACHE' });
       closeSettingsModal();
     } else {
-      console.log("NO CONTROLLER");
       // No controller yet — likely the very first load. Reload the page so a
       // fresh navigation gives the worker a real chance to register and take
       // control, and mark that we still owe it a purge once it does.
