@@ -7,12 +7,21 @@ const CONFIG_LIST_KEY = 'configListItems';
 // List all the local files you want to force-cache for offline use
 const ASSETS_TO_CACHE = [
     self.registration.scope,
+    self.registration.scope + 'index.html',
     self.registration.scope + 'images/CanIOrCantI.png',
     self.registration.scope + 'images/CentralFDR.png',
     self.registration.scope + 'images/FireRestrictionsDates.png',
     self.registration.scope + 'images/FireSafetyTranslations.png',
+    self.registration.scope + 'images/QuickLinks.png',
     self.registration.scope + 'images/RegisterYourBurnOff.png',
+    self.registration.scope + 'css/app.css',
+    self.registration.scope + 'icons/share-white.svg',
+    self.registration.scope + 'icons/icon-192.png',
+    self.registration.scope + 'icons/icon-512.png',
+    self.registration.scope + 'lib/app-state.js',
+    self.registration.scope + 'lib/app.js',
 ];
+
 
 async function assetsToCache() {
   const appState = new self.AppState();
