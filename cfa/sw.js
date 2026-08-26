@@ -58,6 +58,7 @@ async function listCacheEntries() {
 self.addEventListener('fetch', (event) => {
     const url = event.request.url;
     console.log('EVENT URL:' + url);
+    console.log(event.request);
 
     // Don't intercept cross-origin requests (e.g. the CFA SSO link) —
     // let the browser handle them natively in the page context,
