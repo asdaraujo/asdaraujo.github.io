@@ -45,6 +45,15 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
 });
 
+async function listCacheEntries() {
+  const cache = await caches.open(CACHE_NAME);
+  const requests = await cache.keys();
+
+  requests.forEach(request => {
+    console.log('CACHE ENTRY:' + request.url);
+  });
+}
+
 // Fetch Event: Intercept requests and serve from cache first
 self.addEventListener('fetch', (event) => {
     const url = event.request.url;
@@ -60,6 +69,7 @@ self.addEventListener('fetch', (event) => {
 
     event.respondWith(
         caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
+            listCacheEntries();
             console.log('CACHED RESPONSE:' + url + ':' + cachedResponse);
             // Return the cached file if found, otherwise make a network request
             if (cachedResponse) {
