@@ -48,16 +48,19 @@ self.addEventListener('activate', (event) => {
 // Fetch Event: Intercept requests and serve from cache first
 self.addEventListener('fetch', (event) => {
     const url = event.request.url;
+    console.log('EVENT URL:' + url);
 
     // Don't intercept cross-origin requests (e.g. the CFA SSO link) —
     // let the browser handle them natively in the page context,
     // so the page's CSP (upgrade-insecure-requests) applies consistently.
     if (!url.startsWith(self.location.origin)) {
+      console.log('CROSS ORIGIN:' + url + ': do not intercept');
       return; // no respondWith → default network handling in page context
     }
 
     event.respondWith(
         caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
+            console.log('CACHED RESPONSE:' + url + ':' + cachedResponse);
             // Return the cached file if found, otherwise make a network request
             if (cachedResponse) {
               return cachedResponse;
@@ -66,6 +69,7 @@ self.addEventListener('fetch', (event) => {
               return resp;
             }
         }).catch(() => {
+            console.log('CACHE MATCH EXCEPTION:' + url);
             // Optional: Fallback if both cache and network fail (offline)
             if (event.request.mode === 'navigate') {
                 return caches.match('/index.html');

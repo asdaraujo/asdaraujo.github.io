@@ -122,7 +122,7 @@ function closeSettingsModal() {
 // Online/offline state
 
 async function isResourceCached(resourceUrl) {
-  const absoluteUrl = new URL(resourceUrl, document.baseURI);
+  const absoluteUrl = new URL(resourceUrl.split('?')[0], document.baseURI);
   const cache = await caches.open(CACHE_NAME);
 
   // Get all Request objects in this cache
@@ -144,10 +144,12 @@ function refreshLinks() {
 }
 
 function setOnlineMode() {
+  console.log('SETTING ONLINE MODE');
   appState.set('offline', false).then(() => refreshLinks());
 }
 
 function setOfflineMode() {
+  console.log('SETTING OFFLINE MODE');
   appState.set('offline', true).then(() => refreshLinks());
   ping();
 }
@@ -204,7 +206,10 @@ async function handleLinkClick(event, url) {
   let isReachable = false;
   let msg = '';
   try {
+    console.log('CLIENT URL:' + url);
     const res = await fetch(url, { method: "HEAD", mode: 'no-cors', signal: controller.signal });
+    console.log('CLIENT RESPONSE:');
+    console.log(res);
     isReachable = true;
     if (link.classList.contains('not-cached')) {
       setOnlineMode();
@@ -223,7 +228,7 @@ async function handleLinkClick(event, url) {
   }
 
   if (!isReachable) {
-    openMessageModal("It seems you're offline.<br/>Try again later.<br/>" + msg);
+    openMessageModal("It seems you're offline.<br/>Try again later.<br/><br/>" + msg);
   } else if (isImage) {
     openImageModal(url);
   } else {
