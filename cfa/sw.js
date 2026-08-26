@@ -68,8 +68,10 @@ self.addEventListener('fetch', (event) => {
     }
 
     event.respondWith(
-        caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
-            listCacheEntries();
+        caches.match(event.request, { ignoreSearch: true, ignoreVary: true }).then((cachedResponse) => {
+            if (!url.includes('ping')) {
+                listCacheEntries();
+            }
             console.log('CACHED RESPONSE:' + url + ':' + cachedResponse);
             // Return the cached file if found, otherwise make a network request
             if (cachedResponse) {
