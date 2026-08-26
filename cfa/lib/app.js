@@ -5,6 +5,7 @@ const CONFIG_URL_PARAM_KEY = 'cfg';
 const DEFAULT_CONFIG_NAME = 'basic';
 const CONFIG_LIST_KEY = 'configListItems';
 const DEFAULT_CONFIG_KEY = 'defaultConfigId';
+const PENDING_RECACHE_KEY = 'pendingRecacheRequest';
 
 const SWIPE_REVEAL_PX = 84;
 const SWIPE_OPEN_THRESHOLD_PX = 40;
@@ -71,7 +72,7 @@ function applyLuminosity(luminosity) {
   overlay.style.backgroundColor = `rgba(${color}, ${opacity})`;
 }
 
-function waitForServiceWorkerController(timeoutMs = 3000) {
+function waitForServiceWorkerController(timeoutMs = 1500) {
   return new Promise((resolve) => {
     if (navigator.serviceWorker.controller) {
       resolve(navigator.serviceWorker.controller);
@@ -474,13 +475,22 @@ function registerListeners() {
     event.stopPropagation();
 
     const controller = (navigator.serviceWorker && navigator.serviceWorker.controller) || await waitForServiceWorkerController();
+    console.log('CONTROLLER:');
+    console.log(controller);
 
     // Ask the active service worker to purge and re-populate its cache.
     if (controller) {
+      console.log("FOUND CONTROLLER");
       controller.postMessage({ type: 'PURGE_AND_RECACHE' });
+      closeSettingsModal();
+    } else {
+      console.log("NO CONTROLLER");
+      // No controller yet — likely the very first load. Reload the page so a
+      // fresh navigation gives the worker a real chance to register and take
+      // control, and mark that we still owe it a purge once it does.
+      await appState.set(PENDING_RECACHE_KEY, true);
+      window.location.reload();
     }
-  
-    closeSettingsModal();
   });
   
   const configsInput = document.getElementById('configs-new-item');
@@ -554,6 +564,25 @@ async function init(configUrl) {
   }
 }
 
+// Call this once during page init, after listeners are wired up.
+async function checkPendingRecache() {
+  const pending = await appState.get(PENDING_RECACHE_KEY, false);
+  if (!pending) return;
+  console.log('Processing pending recache...');
+
+  // Clear it immediately so this only ever fires once, even if the
+  // controller never shows up and nothing else resets the flag.
+  await appState.set(PENDING_RECACHE_KEY, false);
+
+  const controller = (navigator.serviceWorker && navigator.serviceWorker.controller)
+    || await waitForServiceWorkerController();
+
+  if (controller) {
+    controller.postMessage({ type: 'PURGE_AND_RECACHE' });
+  }
+  // If still no controller after waiting, just drop it — the user can press
+  // refresh again; we don't reload a second time from here.
+}
 const appState = new self.AppState();
 
 (async () => {
@@ -566,4 +595,5 @@ const appState = new self.AppState();
   const configUrl = CONFIG_DIR + '/' + configName + '.json';
   registerListeners();
   init(configUrl);
+  checkPendingRecache();
 })()
